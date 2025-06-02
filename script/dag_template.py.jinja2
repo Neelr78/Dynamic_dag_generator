@@ -1,0 +1,36 @@
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.providers.google.cloud.operators.bigquery import BigQueryInsertJobOperator
+
+default_args = {
+    'owner': 'airflow',
+    'retries': 1,
+    'retry_delay': timedelta(minutes=2),
+}
+
+with DAG(
+    dag_id='{{ dag_id }}',
+    default_args=default_args,
+    start_date=datetime(2025, 5, 27),
+    schedule_interval='@daily',
+    catchup=False,
+) as dag:
+
+    {% for task in tasks %}
+    {{ task.task_id }} = BigQueryInsertJobOperator(
+        task_id='{{ task.task_id }}',
+        configuration={
+            "query": {
+                "query": open("sql/{{ process_name }}/{{ task.sql }}").read(),
+                "useLegacySql": False,
+            }
+        },
+        location='US',
+    )
+    {% endfor %}
+
+    {% for task in tasks %}
+        {% for dep in task.depends_on %}
+    {{ dep }} >> {{ task.task_id }}
+        {% endfor %}
+    {% endfor %}
