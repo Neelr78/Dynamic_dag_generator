@@ -3,7 +3,7 @@
 This repository provides a framework to generate Airflow DAGs dynamically using YAML configuration files, Jinja2 templates, and BigQuery SQL scripts. DAG files are created locally and can be manually deployed to your Airflow environment as needed.
 
 ## 🧩 Project Structure
-```` ``` ````
+```
 project-root/
 ├── config/
 │ ├── attribution/
@@ -25,7 +25,7 @@ project-root/
 │ └── generate_dags.py
 │
 └── README.md
-```` ``` ````
+```
 ## ⚙️ How It Works
 
 1. **Write Configs:** Define DAG structure in a YAML file inside `config/<process_name>/`.
